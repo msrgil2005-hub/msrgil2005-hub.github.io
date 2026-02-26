@@ -81,7 +81,8 @@ function FishDoodles() {
 const PAPER_COLOR = "#f0e8d0"
 const PAPER_BACK_COLOR = "#ede5cb"
 const TOTAL_SHEETS = 4
-const ANIM_DURATION = 1000
+const ANIM_DURATION = 1150
+const TURN_EASING = "cubic-bezier(0.22, 0.61, 0.36, 1)"
 
 function PaperTexture() {
   return (
@@ -117,125 +118,85 @@ function PageEdgeStack() {
 const FLIP_STYLES = `
 @keyframes pageTurnForward {
   0% {
-    transform: perspective(2500px) rotateY(0deg) scaleX(1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transform: perspective(2500px) translateZ(0) rotateY(0deg) rotateZ(0deg) scaleX(1);
   }
-  5% {
-    transform: perspective(2500px) rotateY(-5deg) scaleX(1);
-    box-shadow: -2px 2px 6px rgba(0,0,0,0.1);
+  12% {
+    transform: perspective(2500px) translateZ(0) rotateY(-18deg) rotateZ(-1.5deg) scaleX(0.99);
   }
-  25% {
-    transform: perspective(2500px) rotateY(-45deg) scaleX(0.95);
-    box-shadow: -8px 4px 16px rgba(0,0,0,0.18);
-  }
-  45% {
-    transform: perspective(2500px) rotateY(-85deg) scaleX(0.6);
-    box-shadow: -4px 2px 20px rgba(0,0,0,0.22);
+  34% {
+    transform: perspective(2500px) translateZ(0) rotateY(-58deg) rotateZ(-2.8deg) scaleX(0.9);
   }
   50% {
-    transform: perspective(2500px) rotateY(-90deg) scaleX(0.3);
-    box-shadow: -2px 1px 12px rgba(0,0,0,0.2);
+    transform: perspective(2500px) translateZ(0) rotateY(-88deg) rotateZ(-2.2deg) scaleX(0.54);
   }
-  55% {
-    transform: perspective(2500px) rotateY(-95deg) scaleX(0.6);
-    box-shadow: -4px 2px 20px rgba(0,0,0,0.18);
+  64% {
+    transform: perspective(2500px) translateZ(0) rotateY(-122deg) rotateZ(-1.4deg) scaleX(0.86);
   }
-  75% {
-    transform: perspective(2500px) rotateY(-135deg) scaleX(0.95);
-    box-shadow: -6px 3px 14px rgba(0,0,0,0.12);
-  }
-  95% {
-    transform: perspective(2500px) rotateY(-177deg) scaleX(1);
-    box-shadow: -1px 1px 4px rgba(0,0,0,0.08);
+  86% {
+    transform: perspective(2500px) translateZ(0) rotateY(-168deg) rotateZ(-0.35deg) scaleX(1);
   }
   100% {
-    transform: perspective(2500px) rotateY(-180deg) scaleX(1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transform: perspective(2500px) translateZ(0) rotateY(-180deg) rotateZ(0deg) scaleX(1);
   }
 }
 
 @keyframes pageTurnBackward {
   0% {
-    transform: perspective(2500px) rotateY(-180deg) scaleX(1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transform: perspective(2500px) translateZ(0) rotateY(-180deg) rotateZ(0deg) scaleX(1);
   }
-  5% {
-    transform: perspective(2500px) rotateY(-175deg) scaleX(1);
-    box-shadow: -1px 1px 4px rgba(0,0,0,0.08);
+  14% {
+    transform: perspective(2500px) translateZ(0) rotateY(-166deg) rotateZ(-0.45deg) scaleX(1);
   }
-  25% {
-    transform: perspective(2500px) rotateY(-135deg) scaleX(0.95);
-    box-shadow: -6px 3px 14px rgba(0,0,0,0.12);
-  }
-  45% {
-    transform: perspective(2500px) rotateY(-95deg) scaleX(0.6);
-    box-shadow: -4px 2px 20px rgba(0,0,0,0.18);
+  36% {
+    transform: perspective(2500px) translateZ(0) rotateY(-124deg) rotateZ(-1.6deg) scaleX(0.85);
   }
   50% {
-    transform: perspective(2500px) rotateY(-90deg) scaleX(0.3);
-    box-shadow: -2px 1px 12px rgba(0,0,0,0.2);
+    transform: perspective(2500px) translateZ(0) rotateY(-88deg) rotateZ(-2.2deg) scaleX(0.54);
   }
-  55% {
-    transform: perspective(2500px) rotateY(-85deg) scaleX(0.6);
-    box-shadow: -4px 2px 20px rgba(0,0,0,0.22);
+  66% {
+    transform: perspective(2500px) translateZ(0) rotateY(-56deg) rotateZ(-2.8deg) scaleX(0.9);
   }
-  75% {
-    transform: perspective(2500px) rotateY(-45deg) scaleX(0.95);
-    box-shadow: -8px 4px 16px rgba(0,0,0,0.18);
-  }
-  95% {
-    transform: perspective(2500px) rotateY(-3deg) scaleX(1);
-    box-shadow: -2px 2px 6px rgba(0,0,0,0.1);
+  88% {
+    transform: perspective(2500px) translateZ(0) rotateY(-16deg) rotateZ(-1.6deg) scaleX(0.99);
   }
   100% {
-    transform: perspective(2500px) rotateY(0deg) scaleX(1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transform: perspective(2500px) translateZ(0) rotateY(0deg) rotateZ(0deg) scaleX(1);
   }
 }
 
 @keyframes coverTurnForward {
   0% {
-    transform: perspective(2500px) rotateY(0deg);
-    box-shadow: 8px 8px 24px rgba(0,0,0,0.6);
+    transform: perspective(2500px) translateZ(0) rotateY(0deg);
   }
-  25% {
-    transform: perspective(2500px) rotateY(-50deg);
-    box-shadow: -10px 4px 20px rgba(0,0,0,0.4);
+  36% {
+    transform: perspective(2500px) translateZ(0) rotateY(-64deg);
   }
   50% {
-    transform: perspective(2500px) rotateY(-95deg);
-    box-shadow: -4px 2px 12px rgba(0,0,0,0.3);
+    transform: perspective(2500px) translateZ(0) rotateY(-92deg);
   }
-  75% {
-    transform: perspective(2500px) rotateY(-140deg);
-    box-shadow: -6px 3px 14px rgba(0,0,0,0.2);
+  82% {
+    transform: perspective(2500px) translateZ(0) rotateY(-156deg);
   }
   100% {
-    transform: perspective(2500px) rotateY(-180deg);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+    transform: perspective(2500px) translateZ(0) rotateY(-180deg);
   }
 }
 
 @keyframes coverTurnBackward {
   0% {
-    transform: perspective(2500px) rotateY(-180deg);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+    transform: perspective(2500px) translateZ(0) rotateY(-180deg);
   }
-  25% {
-    transform: perspective(2500px) rotateY(-140deg);
-    box-shadow: -6px 3px 14px rgba(0,0,0,0.2);
+  18% {
+    transform: perspective(2500px) translateZ(0) rotateY(-152deg);
   }
   50% {
-    transform: perspective(2500px) rotateY(-85deg);
-    box-shadow: -4px 2px 12px rgba(0,0,0,0.3);
+    transform: perspective(2500px) translateZ(0) rotateY(-92deg);
   }
-  75% {
-    transform: perspective(2500px) rotateY(-40deg);
-    box-shadow: -10px 4px 20px rgba(0,0,0,0.4);
+  64% {
+    transform: perspective(2500px) translateZ(0) rotateY(-58deg);
   }
   100% {
-    transform: perspective(2500px) rotateY(0deg);
-    box-shadow: 8px 8px 24px rgba(0,0,0,0.6);
+    transform: perspective(2500px) translateZ(0) rotateY(0deg);
   }
 }
 
@@ -268,8 +229,8 @@ function FlippableSheet({
   const zIndex = isFlipped && !flipDir ? sheetIndex + 1 : zBase
 
   const staticTransform = isFlipped
-    ? "perspective(2500px) rotateY(-180deg) scaleX(1)"
-    : "perspective(2500px) rotateY(0deg) scaleX(1)"
+    ? "perspective(2500px) translateZ(0) rotateY(-180deg) scaleX(1)"
+    : "perspective(2500px) translateZ(0) rotateY(0deg) scaleX(1)"
 
   const animName =
     flipDir === "forward"
@@ -286,8 +247,9 @@ function FlippableSheet({
         transformStyle: "preserve-3d",
         transform: animName ? undefined : staticTransform,
         animation: animName
-          ? `${animName} ${ANIM_DURATION}ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards`
+          ? `${animName} ${ANIM_DURATION}ms ${TURN_EASING} forwards`
           : undefined,
+        willChange: flipDir ? "transform" : "auto",
         zIndex,
         cursor: coverOpen ? "pointer" : "default",
         pointerEvents: coverOpen ? "auto" : "none",
@@ -447,8 +409,8 @@ export function SketchbookCover() {
         : undefined
 
   const coverStaticTransform = coverOpen
-    ? "perspective(2500px) rotateY(-180deg)"
-    : "perspective(2500px) rotateY(0deg)"
+    ? "perspective(2500px) translateZ(0) rotateY(-180deg)"
+    : "perspective(2500px) translateZ(0) rotateY(0deg)"
 
   return (
     <>
@@ -503,8 +465,9 @@ export function SketchbookCover() {
                 transformStyle: "preserve-3d",
                 transform: coverAnimName ? undefined : coverStaticTransform,
                 animation: coverAnimName
-                  ? `${coverAnimName} ${ANIM_DURATION}ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards`
+                  ? `${coverAnimName} ${ANIM_DURATION}ms ${TURN_EASING} forwards`
                   : undefined,
+                willChange: coverFlipDir ? "transform" : "auto",
                 zIndex:
                   coverOpen && !coverFlipDir ? 0 : TOTAL_SHEETS + 10,
               }}
