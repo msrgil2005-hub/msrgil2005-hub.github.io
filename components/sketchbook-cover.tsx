@@ -146,9 +146,14 @@ function FlippableSheet({
   onClick: () => void
   onTurnComplete: () => void
 }) {
-  const zBase = TOTAL_SHEETS - sheetIndex
+  const flippedZBase = sheetIndex + 1
+  const unflippedZBase = TOTAL_SHEETS * 2 - sheetIndex
   const isTurning = flipDir !== null
-  const zIndex = isTurning ? TOTAL_SHEETS + 20 : isFlipped ? sheetIndex + 1 : zBase
+  const zIndex = isTurning
+    ? TOTAL_SHEETS * 3
+    : isFlipped
+      ? flippedZBase
+      : unflippedZBase
 
   const staticTransform = isFlipped
     ? "perspective(2500px) rotateY(-180deg) scaleX(1)"
