@@ -136,7 +136,6 @@ function FlippableSheet({
   isFlipped,
   flipDir,
   coverOpen,
-  stackOffset,
   onClick,
   onTurnComplete,
 }: {
@@ -144,7 +143,6 @@ function FlippableSheet({
   isFlipped: boolean
   flipDir: FlipDir
   coverOpen: boolean
-  stackOffset: number
   onClick: () => void
   onTurnComplete: () => void
 }) {
@@ -154,9 +152,7 @@ function FlippableSheet({
 
   const staticTransform = isFlipped
     ? "perspective(2500px) rotateY(-180deg) scaleX(1)"
-    : isTurning
-      ? "perspective(2500px) rotateY(0deg) scaleX(1)"
-      : `perspective(2500px) rotateY(0deg) scaleX(1) translateX(${stackOffset}px)`
+    : "perspective(2500px) rotateY(0deg) scaleX(1)"
 
   const curlAnim =
     flipDir === "forward"
@@ -341,11 +337,6 @@ export function SketchbookCover() {
       ? false
       : settledHasFlippedSheets
 
-  const unflippedStack = settledFlippedSheets
-    .map((isSheetFlipped, idx) => ({ isSheetFlipped, idx }))
-    .filter(({ isSheetFlipped }) => !isSheetFlipped)
-    .map(({ idx }) => idx)
-
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: FLIP_STYLES }} />
@@ -383,7 +374,6 @@ export function SketchbookCover() {
                   isFlipped={flippedSheets[idx]}
                   flipDir={sheetFlipDirs[idx]}
                   coverOpen={coverOpen}
-                  stackOffset={Math.max(0, unflippedStack.indexOf(idx)) * 1.6}
                   onClick={() => handleSheetClick(idx)}
                   onTurnComplete={() => {
                     setSettledFlippedSheets(flippedSheets)
