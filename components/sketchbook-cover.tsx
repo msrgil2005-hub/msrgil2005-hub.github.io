@@ -172,7 +172,7 @@ function FlippableSheet({
         transformOrigin: "left center",
         transformStyle: "preserve-3d",
         transform: staticTransform,
-        transition: `transform ${ANIM_DURATION}ms ${TURN_EASE}`,
+        transition: isTurning ? `transform ${ANIM_DURATION}ms ${TURN_EASE}` : "none",
         willChange: isTurning ? "transform" : undefined,
         zIndex,
         cursor: coverOpen ? "pointer" : "default",
