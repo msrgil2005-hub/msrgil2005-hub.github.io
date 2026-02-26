@@ -263,6 +263,9 @@ export function SketchbookCover() {
   const [flippedSheets, setFlippedSheets] = useState<boolean[]>(
     Array(TOTAL_SHEETS).fill(false)
   )
+  const [settledFlippedSheets, setSettledFlippedSheets] = useState<boolean[]>(
+    Array(TOTAL_SHEETS).fill(false)
+  )
   const [sheetFlipDirs, setSheetFlipDirs] = useState<FlipDir[]>(
     Array(TOTAL_SHEETS).fill(null)
   )
@@ -317,9 +320,21 @@ export function SketchbookCover() {
     ? "perspective(2500px) rotateY(-180deg)"
     : "perspective(2500px) rotateY(0deg)"
 
-  const hasFlippedSheets = flippedSheets.some(Boolean)
+  const settledHasFlippedSheets = settledFlippedSheets.some(Boolean)
+  const hasLogicalFlippedSheets = flippedSheets.some(Boolean)
+  const isOpeningFromCoverSpread =
+    !settledHasFlippedSheets && sheetFlipDirs.some((d) => d === "forward")
+  const isClosingToCoverSpread =
+    settledHasFlippedSheets &&
+    !hasLogicalFlippedSheets &&
+    sheetFlipDirs.some((d) => d === "backward")
+  const showPaperLeftSide = isOpeningFromCoverSpread
+    ? true
+    : isClosingToCoverSpread
+      ? false
+      : settledHasFlippedSheets
 
-  const unflippedStack = flippedSheets
+  const unflippedStack = settledFlippedSheets
     .map((isSheetFlipped, idx) => ({ isSheetFlipped, idx }))
     .filter(({ isSheetFlipped }) => !isSheetFlipped)
     .map(({ idx }) => idx)
@@ -368,6 +383,7 @@ export function SketchbookCover() {
                   stackOffset={Math.max(0, unflippedStack.indexOf(idx)) * 1.6}
                   onClick={() => handleSheetClick(idx)}
                   onTurnComplete={() => {
+                    setSettledFlippedSheets(flippedSheets)
                     setSheetFlipDirs((prev) => {
                       if (!prev[idx]) return prev
                       const next = [...prev]
@@ -476,18 +492,24 @@ export function SketchbookCover() {
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
-                  background:
-                    hasFlippedSheets
-                      ? `linear-gradient(145deg, ${PAPER_BACK_COLOR} 0%, ${PAPER_COLOR} 55%, ${PAPER_BACK_COLOR} 100%)`
-                      : "linear-gradient(145deg, #181818 0%, #101010 50%, #0a0a0a 100%)",
+                  background: "linear-gradient(145deg, #181818 0%, #101010 50%, #0a0a0a 100%)",
                 }}
               >
-                {hasFlippedSheets && <PaperTexture />}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: `linear-gradient(145deg, ${PAPER_BACK_COLOR} 0%, ${PAPER_COLOR} 55%, ${PAPER_BACK_COLOR} 100%)`,
+                    opacity: showPaperLeftSide ? 1 : 0,
+                    transition: `opacity ${ANIM_DURATION}ms ${TURN_EASE}`,
+                  }}
+                >
+                  <PaperTexture />
+                </div>
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background:
-                      hasFlippedSheets
+                      showPaperLeftSide
                         ? "linear-gradient(90deg, rgba(0,0,0,0.07) 0%, rgba(0,0,0,0.02) 14%, transparent 40%)"
                         : "linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 18%, transparent 40%)",
                   }}
