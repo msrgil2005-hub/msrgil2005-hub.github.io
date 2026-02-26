@@ -1,559 +1,507 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import gsap from "gsap"
 
-function FishDoodles() {
-  return (
-    <svg
-      viewBox="0 0 480 720"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full"
-      preserveAspectRatio="xMidYMid slice"
-    >
-      <defs>
-        <linearGradient id="fishGloss1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#7DBBD9" stopOpacity="0.6" />
-          <stop offset="40%" stopColor="#5F9CC4" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#4A7FA3" stopOpacity="0.2" />
-        </linearGradient>
-        <linearGradient id="fishGloss2" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#8ECAE6" stopOpacity="0.5" />
-          <stop offset="50%" stopColor="#5F9CC4" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="#4A7FA3" stopOpacity="0.15" />
-        </linearGradient>
-        <linearGradient id="fishGloss3" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stopColor="#9DD5ED" stopOpacity="0.45" />
-          <stop offset="60%" stopColor="#5F9CC4" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#3D6E8E" stopOpacity="0.15" />
-        </linearGradient>
-      </defs>
-      <g transform="translate(60, 120) rotate(-10)">
-        <ellipse cx="0" cy="0" rx="18" ry="8" fill="url(#fishGloss1)" stroke="#5F9CC4" strokeWidth="1.2" />
-        <path d="M-18,0 L-28,-7 L-28,7 Z" fill="url(#fishGloss1)" stroke="#5F9CC4" strokeWidth="1.2" strokeLinejoin="round" />
-        <circle cx="10" cy="-2" r="1.5" fill="#5F9CC4" opacity="0.7" />
-      </g>
-      <g transform="translate(390, 90) scale(-1,1) rotate(5)">
-        <ellipse cx="0" cy="0" rx="22" ry="10" fill="url(#fishGloss2)" stroke="#5F9CC4" strokeWidth="1.2" />
-        <path d="M-22,0 L-34,-9 L-34,9 Z" fill="url(#fishGloss2)" stroke="#5F9CC4" strokeWidth="1.2" strokeLinejoin="round" />
-        <circle cx="12" cy="-3" r="2" fill="#5F9CC4" opacity="0.7" />
-      </g>
-      <g transform="translate(45, 320) rotate(8)">
-        <ellipse cx="0" cy="0" rx="14" ry="6" fill="url(#fishGloss3)" stroke="#5F9CC4" strokeWidth="1" />
-        <path d="M-14,0 L-22,-5 L-22,5 Z" fill="url(#fishGloss3)" stroke="#5F9CC4" strokeWidth="1" strokeLinejoin="round" />
-        <circle cx="8" cy="-1.5" r="1.2" fill="#5F9CC4" opacity="0.7" />
-      </g>
-      <g transform="translate(430, 380) scale(-1,1) rotate(-6)">
-        <ellipse cx="0" cy="0" rx="16" ry="7" fill="url(#fishGloss1)" stroke="#5F9CC4" strokeWidth="1" />
-        <path d="M-16,0 L-25,-6 L-25,6 Z" fill="url(#fishGloss1)" stroke="#5F9CC4" strokeWidth="1" strokeLinejoin="round" />
-        <circle cx="9" cy="-2" r="1.4" fill="#5F9CC4" opacity="0.7" />
-      </g>
-      <g transform="translate(90, 580) rotate(-5)">
-        <ellipse cx="0" cy="0" rx="20" ry="9" fill="url(#fishGloss2)" stroke="#5F9CC4" strokeWidth="1.2" />
-        <path d="M-20,0 L-30,-8 L-30,8 Z" fill="url(#fishGloss2)" stroke="#5F9CC4" strokeWidth="1.2" strokeLinejoin="round" />
-        <circle cx="11" cy="-2.5" r="1.8" fill="#5F9CC4" opacity="0.7" />
-      </g>
-      <g transform="translate(370, 620) scale(-1,1) rotate(12)">
-        <ellipse cx="0" cy="0" rx="12" ry="5" fill="url(#fishGloss3)" stroke="#5F9CC4" strokeWidth="1" />
-        <path d="M-12,0 L-19,-4 L-19,4 Z" fill="url(#fishGloss3)" stroke="#5F9CC4" strokeWidth="1" strokeLinejoin="round" />
-        <circle cx="7" cy="-1" r="1" fill="#5F9CC4" opacity="0.7" />
-      </g>
-      <g transform="translate(240, 55) rotate(3)">
-        <ellipse cx="0" cy="0" rx="10" ry="4.5" fill="url(#fishGloss1)" stroke="#5F9CC4" strokeWidth="0.8" />
-        <path d="M-10,0 L-16,-4 L-16,4 Z" fill="url(#fishGloss1)" stroke="#5F9CC4" strokeWidth="0.8" strokeLinejoin="round" />
-        <circle cx="6" cy="-1" r="1" fill="#5F9CC4" opacity="0.7" />
-      </g>
-      <g transform="translate(260, 670) scale(-1,1) rotate(-3)">
-        <ellipse cx="0" cy="0" rx="15" ry="6.5" fill="url(#fishGloss2)" stroke="#5F9CC4" strokeWidth="1" />
-        <path d="M-15,0 L-23,-5.5 L-23,5.5 Z" fill="url(#fishGloss2)" stroke="#5F9CC4" strokeWidth="1" strokeLinejoin="round" />
-        <circle cx="8" cy="-1.5" r="1.2" fill="#5F9CC4" opacity="0.7" />
-      </g>
-      <circle cx="130" cy="180" r="2.5" fill="#5F9CC4" opacity="0.15" />
-      <circle cx="350" cy="150" r="1.8" fill="#5F9CC4" opacity="0.12" />
-      <circle cx="80" cy="450" r="2" fill="#5F9CC4" opacity="0.1" />
-      <circle cx="400" cy="500" r="3" fill="#5F9CC4" opacity="0.12" />
-      <circle cx="200" cy="650" r="1.5" fill="#5F9CC4" opacity="0.1" />
-      <circle cx="320" cy="270" r="2" fill="#5F9CC4" opacity="0.1" />
-    </svg>
-  )
-}
+type FlipDirection = "forward" | "backward"
 
-const PAPER_COLOR = "#f0e8d0"
-const PAPER_BACK_COLOR = "#ede5cb"
-const TOTAL_SHEETS = 4
-const ANIM_DURATION = 1150
-const TURN_EASING = "cubic-bezier(0.22, 0.61, 0.36, 1)"
-
-function PaperTexture() {
-  return (
-    <div
-      className="absolute inset-0 pointer-events-none opacity-[0.04]"
-      style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-      }}
-    />
-  )
-}
-
-function PageEdgeStack() {
-  return (
-    <div
-      className="absolute right-0 top-[2px] bottom-[2px] w-[clamp(4px,1vw,8px)] z-10"
-      style={{
-        background: `linear-gradient(90deg, ${PAPER_BACK_COLOR}, ${PAPER_COLOR} 30%, ${PAPER_BACK_COLOR} 60%, ${PAPER_COLOR} 80%, ${PAPER_BACK_COLOR})`,
-      }}
-    />
-  )
-}
-
-/* ------------------------------------------------------------------
-   Realistic page turn keyframes:
-   - Corner lifts first via slight rotateZ (top-right lifts)
-   - Page rotates on left-edge hinge via rotateY
-   - Cylindrical curl simulated via scaleX compression mid-turn
-     so the page appears paper-thin when edge-on (~90deg)
-   - Soft shadows animate alongside
-   ------------------------------------------------------------------ */
-
-const FLIP_STYLES = `
-@keyframes pageTurnForward {
-  0% {
-    transform: perspective(2500px) translateZ(0) rotateY(0deg) rotateZ(0deg) scaleX(1);
-  }
-  12% {
-    transform: perspective(2500px) translateZ(0) rotateY(-18deg) rotateZ(-1.5deg) scaleX(0.99);
-  }
-  34% {
-    transform: perspective(2500px) translateZ(0) rotateY(-58deg) rotateZ(-2.8deg) scaleX(0.9);
-  }
-  50% {
-    transform: perspective(2500px) translateZ(0) rotateY(-88deg) rotateZ(-2.2deg) scaleX(0.54);
-  }
-  64% {
-    transform: perspective(2500px) translateZ(0) rotateY(-122deg) rotateZ(-1.4deg) scaleX(0.86);
-  }
-  86% {
-    transform: perspective(2500px) translateZ(0) rotateY(-168deg) rotateZ(-0.35deg) scaleX(1);
-  }
-  100% {
-    transform: perspective(2500px) translateZ(0) rotateY(-180deg) rotateZ(0deg) scaleX(1);
-  }
-}
-
-@keyframes pageTurnBackward {
-  0% {
-    transform: perspective(2500px) translateZ(0) rotateY(-180deg) rotateZ(0deg) scaleX(1);
-  }
-  14% {
-    transform: perspective(2500px) translateZ(0) rotateY(-166deg) rotateZ(-0.45deg) scaleX(1);
-  }
-  36% {
-    transform: perspective(2500px) translateZ(0) rotateY(-124deg) rotateZ(-1.6deg) scaleX(0.85);
-  }
-  50% {
-    transform: perspective(2500px) translateZ(0) rotateY(-88deg) rotateZ(-2.2deg) scaleX(0.54);
-  }
-  66% {
-    transform: perspective(2500px) translateZ(0) rotateY(-56deg) rotateZ(-2.8deg) scaleX(0.9);
-  }
-  88% {
-    transform: perspective(2500px) translateZ(0) rotateY(-16deg) rotateZ(-1.6deg) scaleX(0.99);
-  }
-  100% {
-    transform: perspective(2500px) translateZ(0) rotateY(0deg) rotateZ(0deg) scaleX(1);
-  }
-}
-
-@keyframes coverTurnForward {
-  0% {
-    transform: perspective(2500px) translateZ(0) rotateY(0deg);
-  }
-  36% {
-    transform: perspective(2500px) translateZ(0) rotateY(-64deg);
-  }
-  50% {
-    transform: perspective(2500px) translateZ(0) rotateY(-92deg);
-  }
-  82% {
-    transform: perspective(2500px) translateZ(0) rotateY(-156deg);
-  }
-  100% {
-    transform: perspective(2500px) translateZ(0) rotateY(-180deg);
-  }
-}
-
-@keyframes coverTurnBackward {
-  0% {
-    transform: perspective(2500px) translateZ(0) rotateY(-180deg);
-  }
-  18% {
-    transform: perspective(2500px) translateZ(0) rotateY(-152deg);
-  }
-  50% {
-    transform: perspective(2500px) translateZ(0) rotateY(-92deg);
-  }
-  64% {
-    transform: perspective(2500px) translateZ(0) rotateY(-58deg);
-  }
-  100% {
-    transform: perspective(2500px) translateZ(0) rotateY(0deg);
-  }
-}
-
-/* Shadow that falls onto the page beneath during a turn */
-@keyframes pageShadowForward {
-  0%   { opacity: 0; }
-  30%  { opacity: 0.25; }
-  50%  { opacity: 0.4; }
-  70%  { opacity: 0.25; }
-  100% { opacity: 0; }
-}
-`
-
-type FlipDir = "forward" | "backward" | null
-
-function FlippableSheet({
-  sheetIndex,
-  isFlipped,
-  flipDir,
-  coverOpen,
-  onClick,
-}: {
+type FlipMeta = {
+  visible: boolean
+  direction: FlipDirection
   sheetIndex: number
-  isFlipped: boolean
-  flipDir: FlipDir
-  coverOpen: boolean
-  onClick: () => void
-}) {
-  const zBase = TOTAL_SHEETS - sheetIndex
-  const zIndex = isFlipped && !flipDir ? sheetIndex + 1 : zBase
+}
 
-  const staticTransform = isFlipped
-    ? "perspective(2500px) translateZ(0) rotateY(-180deg) scaleX(1)"
-    : "perspective(2500px) translateZ(0) rotateY(0deg) scaleX(1)"
+const TOTAL_SHEETS = 6
+const DRAG_THRESHOLD_FORWARD = 0.42
+const DRAG_THRESHOLD_BACKWARD = 0.58
 
-  const animName =
-    flipDir === "forward"
-      ? "pageTurnForward"
-      : flipDir === "backward"
-        ? "pageTurnBackward"
-        : undefined
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max)
 
-  return (
-    <div
-      className="absolute inset-0"
-      style={{
-        transformOrigin: "left center",
-        transformStyle: "preserve-3d",
-        transform: animName ? undefined : staticTransform,
-        animation: animName
-          ? `${animName} ${ANIM_DURATION}ms ${TURN_EASING} forwards`
-          : undefined,
-        willChange: flipDir ? "transform" : "auto",
-        zIndex,
-        cursor: coverOpen ? "pointer" : "default",
-        pointerEvents: coverOpen ? "auto" : "none",
-      }}
-      onClick={(e) => {
-        e.stopPropagation()
-        onClick()
-      }}
-      role="button"
-      tabIndex={coverOpen ? 0 : -1}
-      aria-label={isFlipped ? "Voltar pagina" : "Virar pagina"}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault()
-          onClick()
-        }
-      }}
-    >
-      {/* Front face -- right-hand page */}
-      <div
-        className="absolute inset-0 rounded-r-lg sm:rounded-r-xl overflow-hidden"
-        style={{
-          backfaceVisibility: "hidden",
-          background: PAPER_COLOR,
-        }}
-      >
-        <PageEdgeStack />
-        <PaperTexture />
-        {/* Curved highlight/shadow that simulates cylindrical curl */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(0,0,0,0.04) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.02) 100%)",
-          }}
-        />
-      </div>
-
-      {/* Back face -- left-hand page when flipped */}
-      <div
-        className="absolute inset-0 rounded-r-lg sm:rounded-r-xl overflow-hidden"
-        style={{
-          backfaceVisibility: "hidden",
-          transform: "rotateY(180deg)",
-          background: PAPER_BACK_COLOR,
-        }}
-      >
-        <PaperTexture />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(-90deg, rgba(0,0,0,0.05) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.02) 100%)",
-          }}
-        />
-      </div>
-
-      {/* Drop shadow onto the page below, visible mid-animation */}
-      {flipDir && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 30%, transparent 60%)",
-            animation: `pageShadowForward ${ANIM_DURATION}ms ease forwards`,
-            zIndex: -1,
-          }}
-        />
-      )}
-    </div>
-  )
+function pageLabel(pageNumber: number | null) {
+  if (!pageNumber) return ""
+  return String(pageNumber).padStart(2, "0")
 }
 
 export function SketchbookCover() {
-  const [coverOpen, setCoverOpen] = useState(false)
-  const [coverFlipDir, setCoverFlipDir] = useState<FlipDir>(null)
-  const [flippedSheets, setFlippedSheets] = useState<boolean[]>(
-    Array(TOTAL_SHEETS).fill(false)
+  const spreadRef = useRef<HTMLDivElement | null>(null)
+  const flipSheetRef = useRef<HTMLDivElement | null>(null)
+  const foldGlowRef = useRef<HTMLDivElement | null>(null)
+  const castShadowRef = useRef<HTMLDivElement | null>(null)
+
+  const flipProgress = useRef({ value: 0 })
+  const dragState = useRef<{
+    dragging: boolean
+    direction: FlipDirection
+    startX: number
+    pageWidth: number
+  } | null>(null)
+
+  const [currentSheet, setCurrentSheet] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [flipMeta, setFlipMeta] = useState<FlipMeta>({
+    visible: false,
+    direction: "forward",
+    sheetIndex: 0,
+  })
+
+  const canFlipForward = currentSheet < TOTAL_SHEETS
+  const canFlipBackward = currentSheet > 0
+
+  const leftStaticPage = useMemo(
+    () => (currentSheet === 0 ? null : currentSheet * 2),
+    [currentSheet],
   )
-  const [sheetFlipDirs, setSheetFlipDirs] = useState<FlipDir[]>(
-    Array(TOTAL_SHEETS).fill(null)
-  )
-  const [animating, setAnimating] = useState(false)
+  const rightStaticPage = useMemo(() => currentSheet * 2 + 1, [currentSheet])
 
-  const clearCoverFlip = useCallback(() => {
-    setCoverFlipDir(null)
-    setAnimating(false)
-  }, [])
+  const setFlipVisual = useCallback((progress: number) => {
+    const sheetElement = flipSheetRef.current
+    const foldGlowElement = foldGlowRef.current
+    const castShadowElement = castShadowRef.current
+    const direction = flipMeta.direction
 
-  useEffect(() => {
-    if (coverFlipDir) {
-      const t = setTimeout(clearCoverFlip, ANIM_DURATION + 50)
-      return () => clearTimeout(t)
-    }
-  }, [coverFlipDir, clearCoverFlip])
+    if (!sheetElement || !foldGlowElement || !castShadowElement) return
 
-  useEffect(() => {
-    if (sheetFlipDirs.some((d) => d !== null)) {
-      const t = setTimeout(() => {
-        setSheetFlipDirs(Array(TOTAL_SHEETS).fill(null))
-        setAnimating(false)
-      }, ANIM_DURATION + 50)
-      return () => clearTimeout(t)
-    }
-  }, [sheetFlipDirs])
+    const bend = Math.sin(progress * Math.PI)
+    const scaleX = 1 - bend * 0.42
+    const rotateZ = (direction === "forward" ? -1 : 1) * bend * 3.2
+    const angle = -180 * progress
 
-  function handleCoverClick() {
-    if (animating) return
-    if (!coverOpen) {
-      setAnimating(true)
-      setCoverFlipDir("forward")
-      setCoverOpen(true)
-    } else {
-      const allClosed = flippedSheets.every((f) => !f)
-      if (allClosed) {
-        setAnimating(true)
-        setCoverFlipDir("backward")
-        setCoverOpen(false)
-      }
-    }
-  }
-
-  function handleSheetClick(index: number) {
-    if (animating) return
-    setFlippedSheets((prev) => {
-      const next = [...prev]
-      if (!next[index]) {
-        const firstUnflipped = prev.findIndex((f) => !f)
-        if (firstUnflipped !== index) return prev
-        next[index] = true
-        setAnimating(true)
-        setSheetFlipDirs((d) => {
-          const nd = [...d]
-          nd[index] = "forward"
-          return nd
-        })
-      } else {
-        const lastFlipped = prev.lastIndexOf(true)
-        if (lastFlipped !== index) return prev
-        next[index] = false
-        setAnimating(true)
-        setSheetFlipDirs((d) => {
-          const nd = [...d]
-          nd[index] = "backward"
-          return nd
-        })
-      }
-      return next
+    gsap.set(sheetElement, {
+      transform: `translate3d(0,0,0) perspective(2800px) rotateY(${angle}deg) rotateZ(${rotateZ}deg) scaleX(${scaleX})`,
     })
-  }
 
-  const coverAnimName =
-    coverFlipDir === "forward"
-      ? "coverTurnForward"
-      : coverFlipDir === "backward"
-        ? "coverTurnBackward"
-        : undefined
+    gsap.set(foldGlowElement, {
+      opacity: 0.16 + bend * 0.52,
+      background:
+        direction === "forward"
+          ? "linear-gradient(90deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.14) 35%, rgba(0,0,0,0.18) 80%, rgba(0,0,0,0.28) 100%)"
+          : "linear-gradient(-90deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.14) 35%, rgba(0,0,0,0.18) 80%, rgba(0,0,0,0.28) 100%)",
+    })
 
-  const coverStaticTransform = coverOpen
-    ? "perspective(2500px) translateZ(0) rotateY(-180deg)"
-    : "perspective(2500px) translateZ(0) rotateY(0deg)"
+    gsap.set(castShadowElement, {
+      opacity: bend * 0.65,
+      transform: `translate3d(0,0,0) scaleX(${0.4 + bend * 0.6})`,
+    })
+  }, [flipMeta.direction])
+
+  const finalizeFlip = useCallback((targetProgress: number) => {
+    if (targetProgress === 1 && flipMeta.direction === "forward") {
+      setCurrentSheet((value) => clamp(value + 1, 0, TOTAL_SHEETS))
+    }
+
+    if (targetProgress === 0 && flipMeta.direction === "backward") {
+      setCurrentSheet((value) => clamp(value - 1, 0, TOTAL_SHEETS))
+    }
+
+    setFlipMeta((current) => ({ ...current, visible: false }))
+    setIsAnimating(false)
+    dragState.current = null
+  }, [flipMeta.direction])
+
+  const animateFlipTo = useCallback((targetProgress: number) => {
+    setIsAnimating(true)
+
+    gsap.killTweensOf(flipProgress.current)
+    gsap.to(flipProgress.current, {
+      value: targetProgress,
+      duration: 0.85,
+      ease: "power3.inOut",
+      onUpdate: () => setFlipVisual(flipProgress.current.value),
+      onComplete: () => finalizeFlip(targetProgress),
+    })
+  }, [finalizeFlip, setFlipVisual])
+
+  const beginForwardFlip = useCallback((startProgress: number) => {
+    if (!canFlipForward || isAnimating) return
+
+    setFlipMeta({
+      visible: true,
+      direction: "forward",
+      sheetIndex: currentSheet,
+    })
+
+    flipProgress.current.value = clamp(startProgress, 0, 1)
+    requestAnimationFrame(() => setFlipVisual(flipProgress.current.value))
+  }, [canFlipForward, currentSheet, isAnimating, setFlipVisual])
+
+  const beginBackwardFlip = useCallback((startProgress: number) => {
+    if (!canFlipBackward || isAnimating) return
+
+    setFlipMeta({
+      visible: true,
+      direction: "backward",
+      sheetIndex: currentSheet - 1,
+    })
+
+    flipProgress.current.value = clamp(startProgress, 0, 1)
+    requestAnimationFrame(() => setFlipVisual(flipProgress.current.value))
+  }, [canFlipBackward, currentSheet, isAnimating, setFlipVisual])
+
+  const triggerForwardClick = useCallback(() => {
+    if (!canFlipForward || isAnimating) return
+    beginForwardFlip(0)
+    requestAnimationFrame(() => animateFlipTo(1))
+  }, [animateFlipTo, beginForwardFlip, canFlipForward, isAnimating])
+
+  const triggerBackwardClick = useCallback(() => {
+    if (!canFlipBackward || isAnimating) return
+    beginBackwardFlip(1)
+    requestAnimationFrame(() => animateFlipTo(0))
+  }, [animateFlipTo, beginBackwardFlip, canFlipBackward, isAnimating])
+
+  const handlePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>, direction: FlipDirection) => {
+      if (isAnimating) return
+
+      const container = spreadRef.current
+      if (!container) return
+
+      const bounds = container.getBoundingClientRect()
+      const pageWidth = bounds.width / 2
+      const localX = event.clientX - bounds.left
+
+      if (direction === "forward") {
+        if (!canFlipForward || localX < bounds.width * 0.7) return
+        beginForwardFlip(0)
+      } else {
+        if (!canFlipBackward || localX > bounds.width * 0.3) return
+        beginBackwardFlip(1)
+      }
+
+      dragState.current = {
+        dragging: true,
+        direction,
+        startX: event.clientX,
+        pageWidth,
+      }
+
+      event.currentTarget.setPointerCapture(event.pointerId)
+      event.preventDefault()
+    },
+    [
+      beginBackwardFlip,
+      beginForwardFlip,
+      canFlipBackward,
+      canFlipForward,
+      isAnimating,
+    ],
+  )
+
+  const handlePointerMove = useCallback((event: PointerEvent) => {
+    const state = dragState.current
+    if (!state || !state.dragging || isAnimating) return
+
+    const deltaX = event.clientX - state.startX
+
+    if (state.direction === "forward") {
+      const progress = clamp((-deltaX) / (state.pageWidth * 0.95), 0, 1)
+      flipProgress.current.value = progress
+      setFlipVisual(progress)
+    } else {
+      const progress = clamp(1 - deltaX / (state.pageWidth * 0.95), 0, 1)
+      flipProgress.current.value = progress
+      setFlipVisual(progress)
+    }
+  }, [isAnimating, setFlipVisual])
+
+  const handlePointerUp = useCallback(() => {
+    const state = dragState.current
+    if (!state || !state.dragging) return
+
+    state.dragging = false
+
+    if (state.direction === "forward") {
+      if (flipProgress.current.value >= DRAG_THRESHOLD_FORWARD) {
+        animateFlipTo(1)
+      } else {
+        animateFlipTo(0)
+      }
+      return
+    }
+
+    if (flipProgress.current.value <= DRAG_THRESHOLD_BACKWARD) {
+      animateFlipTo(0)
+    } else {
+      animateFlipTo(1)
+    }
+  }, [animateFlipTo])
+
+  useEffect(() => {
+    window.addEventListener("pointermove", handlePointerMove, { passive: true })
+    window.addEventListener("pointerup", handlePointerUp)
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove)
+      window.removeEventListener("pointerup", handlePointerUp)
+    }
+  }, [handlePointerMove, handlePointerUp])
+
+  const flipFrontPage = flipMeta.sheetIndex * 2 + 1
+  const flipBackPage = flipMeta.sheetIndex * 2 + 2
 
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: FLIP_STYLES }} />
-      <main className="flex items-center justify-center min-h-svh bg-[#0d0d0d] p-4 sm:p-6 md:p-8 overflow-hidden">
-        {/* Book wrapper -- shifts left when open to center the two-page spread */}
-        <div
-          className="relative transition-transform duration-700 ease-in-out"
-          style={{
-            transform: coverOpen
-              ? "translateX(calc(min(45vw, 240px) * -0.45))"
-              : "translateX(0)",
-          }}
-        >
-          {/* Perspective container */}
-          <div
-            className="relative w-[min(90vw,480px)] aspect-[3/4.5]"
-            style={{ perspective: "2500px", perspectiveOrigin: "left center" }}
+    <main className="book-stage">
+      <section className="book-shell">
+        <div className="book-spread" ref={spreadRef}>
+          <div className="spine-shadow" />
+
+          <article
+            className="paper-page left-page"
+            onClick={triggerBackwardClick}
+            onPointerDown={(event) => handlePointerDown(event, "backward")}
+            role="button"
+            tabIndex={0}
+            aria-label="Previous page"
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault()
+                triggerBackwardClick()
+              }
+            }}
           >
-            {/* Back page -- always visible at the bottom */}
-            <div
-              className="absolute inset-0 rounded-r-lg sm:rounded-r-xl overflow-hidden"
-              style={{
-                background: PAPER_COLOR,
-                boxShadow: "4px 4px 16px rgba(0,0,0,0.4)",
-                zIndex: 0,
-              }}
-            >
-              <PageEdgeStack />
-              <PaperTexture />
-            </div>
+            <div className="paper-noise" />
+            <span className="page-number">{pageLabel(leftStaticPage)}</span>
+            <h1 className="book-title">Margarida Gil</h1>
+            <p className="book-subtitle">Design Portfolio</p>
+          </article>
 
-            {/* Interior sheets, rendered bottom-up */}
-            {Array.from({ length: TOTAL_SHEETS })
-              .map((_, i) => TOTAL_SHEETS - 1 - i)
-              .map((idx) => (
-                <FlippableSheet
-                  key={idx}
-                  sheetIndex={idx}
-                  isFlipped={flippedSheets[idx]}
-                  flipDir={sheetFlipDirs[idx]}
-                  coverOpen={coverOpen}
-                  onClick={() => handleSheetClick(idx)}
-                />
-              ))}
+          <article
+            className="paper-page right-page"
+            onClick={triggerForwardClick}
+            onPointerDown={(event) => handlePointerDown(event, "forward")}
+            role="button"
+            tabIndex={0}
+            aria-label="Next page"
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault()
+                triggerForwardClick()
+              }
+            }}
+          >
+            <div className="paper-noise" />
+            <span className="page-number">{pageLabel(rightStaticPage)}</span>
+            <div className="corner-hint">Drag or click</div>
+          </article>
 
-            {/* Cover */}
-            <div
-              className="absolute inset-0 cursor-pointer"
-              style={{
-                transformOrigin: "left center",
-                transformStyle: "preserve-3d",
-                transform: coverAnimName ? undefined : coverStaticTransform,
-                animation: coverAnimName
-                  ? `${coverAnimName} ${ANIM_DURATION}ms ${TURN_EASING} forwards`
-                  : undefined,
-                willChange: coverFlipDir ? "transform" : "auto",
-                zIndex:
-                  coverOpen && !coverFlipDir ? 0 : TOTAL_SHEETS + 10,
-              }}
-              onClick={handleCoverClick}
-              role="button"
-              tabIndex={0}
-              aria-label={coverOpen ? "Fechar caderno" : "Abrir caderno"}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault()
-                  handleCoverClick()
-                }
-              }}
-            >
-              {/* Front of cover */}
-              <div
-                className="absolute inset-0 rounded-tr-lg rounded-br-lg sm:rounded-tr-xl sm:rounded-br-xl overflow-hidden"
-                style={{
-                  backfaceVisibility: "hidden",
-                  background:
-                    "linear-gradient(145deg, #1a1a1a 0%, #111111 50%, #0a0a0a 100%)",
-                }}
-              >
-                {/* Spine */}
-                <div
-                  className="absolute left-0 top-0 bottom-0 w-[clamp(12px,3vw,20px)] z-10"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #0a0a0a 0%, #1a1a1a 40%, #111111 60%, #0a0a0a 100%)",
-                  }}
-                />
+          {flipMeta.visible && (
+            <div className="flip-host" aria-hidden>
+              <div className="flip-cast-shadow" ref={castShadowRef} />
 
-                {/* Elastic band */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[clamp(40px,12vw,80px)] h-[clamp(6px,1.5vw,10px)] bg-[#1a1a1a] rounded-b-full z-20 border-b border-[#333]" />
-
-                {/* Fish doodles */}
-                <div className="absolute inset-0 pointer-events-none z-[1]">
-                  <FishDoodles />
+              <div className="flip-sheet" ref={flipSheetRef}>
+                <div className="flip-face flip-front">
+                  <div className="paper-noise" />
+                  <span className="page-number">{pageLabel(flipFrontPage)}</span>
                 </div>
 
-                {/* Cover text */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-[clamp(16px,4vw,40px)] z-[2]">
-                  <h1 className="font-serif text-foreground text-[clamp(36px,11vw,80px)] font-bold leading-tight text-balance text-center">
-                    Margarida Gil
-                  </h1>
-                  <p className="font-serif text-foreground text-[clamp(16px,5vw,36px)] font-medium tracking-[0.15em] uppercase mt-[clamp(4px,1.5vw,12px)]">
-                    Design Portfolio
-                  </p>
-                  <span className="font-serif text-foreground text-[clamp(14px,3.5vw,24px)] font-bold mt-[clamp(8px,2vw,20px)]">
-                    {"'05"}
-                  </span>
+                <div className="flip-face flip-back">
+                  <div className="paper-noise" />
+                  <span className="page-number">{pageLabel(flipBackPage)}</span>
                 </div>
 
-                {/* Grain overlay */}
-                <div
-                  className="absolute inset-0 pointer-events-none opacity-[0.04] mix-blend-overlay"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-                  }}
-                />
-
-                {/* Hint */}
-                <div
-                  className="absolute bottom-[clamp(12px,3vw,24px)] left-1/2 -translate-x-1/2 z-[3] transition-opacity duration-500"
-                  style={{ opacity: coverOpen ? 0 : 1 }}
-                >
-                  <p className="font-sans text-foreground/40 text-[clamp(9px,2vw,12px)] tracking-widest uppercase animate-pulse">
-                    Clica para abrir
-                  </p>
-                </div>
+                <div className="flip-fold-glow" ref={foldGlowRef} />
               </div>
-
-              {/* Back of cover */}
-              <div
-                className="absolute inset-0 rounded-lg sm:rounded-xl"
-                style={{
-                  backfaceVisibility: "hidden",
-                  transform: "rotateY(180deg)",
-                  background:
-                    "linear-gradient(145deg, #181818 0%, #101010 50%, #0a0a0a 100%)",
-                }}
-              />
             </div>
-          </div>
+          )}
         </div>
-      </main>
-    </>
+      </section>
+
+      <style jsx>{`
+        .book-stage {
+          min-height: 100svh;
+          display: grid;
+          place-items: center;
+          padding: clamp(12px, 2vw, 28px);
+          background: radial-gradient(circle at 50% 40%, #1e1e1e 0%, #0d0d0d 60%, #090909 100%);
+          overflow: hidden;
+        }
+
+        .book-shell {
+          width: min(96vw, 1200px);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .book-spread {
+          position: relative;
+          width: min(94vw, 1080px);
+          aspect-ratio: 16 / 10;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          border-radius: clamp(12px, 2vw, 24px);
+          transform: translate3d(0, 0, 0);
+          will-change: transform;
+          user-select: none;
+          touch-action: none;
+        }
+
+        .spine-shadow {
+          position: absolute;
+          inset: 0;
+          left: calc(50% - 16px);
+          width: 32px;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.24) 35%, rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.24) 65%, rgba(0, 0, 0, 0.45) 100%);
+          pointer-events: none;
+          z-index: 6;
+        }
+
+        .paper-page {
+          position: relative;
+          overflow: hidden;
+          background: #efe6cf;
+          box-shadow: inset 0 0 0 1px rgba(120, 100, 70, 0.18);
+          transform: translate3d(0, 0, 0);
+        }
+
+        .left-page {
+          border-radius: clamp(12px, 2vw, 20px) 0 0 clamp(12px, 2vw, 20px);
+          box-shadow: inset -26px 0 26px rgba(0, 0, 0, 0.18);
+        }
+
+        .right-page {
+          border-radius: 0 clamp(12px, 2vw, 20px) clamp(12px, 2vw, 20px) 0;
+          box-shadow: inset 26px 0 26px rgba(0, 0, 0, 0.14);
+        }
+
+        .paper-noise {
+          position: absolute;
+          inset: 0;
+          opacity: 0.06;
+          background-image: radial-gradient(rgba(0, 0, 0, 0.35) 0.45px, transparent 0.45px);
+          background-size: 2.8px 2.8px;
+          pointer-events: none;
+        }
+
+        .book-title {
+          position: absolute;
+          left: clamp(16px, 3vw, 34px);
+          top: clamp(20px, 4vw, 42px);
+          font-size: clamp(26px, 4vw, 56px);
+          font-weight: 700;
+          letter-spacing: 0.02em;
+          color: rgba(18, 18, 18, 0.82);
+          margin: 0;
+        }
+
+        .book-subtitle {
+          position: absolute;
+          left: clamp(16px, 3vw, 34px);
+          top: clamp(74px, 9vw, 130px);
+          margin: 0;
+          font-size: clamp(12px, 1.3vw, 20px);
+          text-transform: uppercase;
+          letter-spacing: 0.24em;
+          color: rgba(18, 18, 18, 0.52);
+        }
+
+        .page-number {
+          position: absolute;
+          bottom: clamp(10px, 2vw, 20px);
+          font-size: clamp(10px, 1.2vw, 15px);
+          color: rgba(0, 0, 0, 0.46);
+          z-index: 2;
+        }
+
+        .left-page .page-number {
+          left: clamp(16px, 2.4vw, 26px);
+        }
+
+        .right-page .page-number {
+          right: clamp(16px, 2.4vw, 26px);
+        }
+
+        .corner-hint {
+          position: absolute;
+          right: clamp(12px, 2vw, 22px);
+          bottom: clamp(12px, 2vw, 22px);
+          font-size: clamp(9px, 1vw, 12px);
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(0, 0, 0, 0.34);
+          pointer-events: none;
+        }
+
+        .flip-host {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 20;
+        }
+
+        .flip-sheet {
+          position: absolute;
+          inset: 0 0 0 50%;
+          transform-origin: left center;
+          transform-style: preserve-3d;
+          will-change: transform;
+          pointer-events: none;
+          backface-visibility: hidden;
+          contain: paint;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.24);
+        }
+
+        .flip-face {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: #efe6cf;
+          backface-visibility: hidden;
+          box-shadow: inset 0 0 0 1px rgba(120, 100, 70, 0.18);
+        }
+
+        .flip-front {
+          border-radius: 0 clamp(12px, 2vw, 20px) clamp(12px, 2vw, 20px) 0;
+        }
+
+        .flip-back {
+          transform: rotateY(180deg);
+          border-radius: clamp(12px, 2vw, 20px) 0 0 clamp(12px, 2vw, 20px);
+        }
+
+        .flip-front .page-number {
+          right: clamp(16px, 2.4vw, 26px);
+        }
+
+        .flip-back .page-number {
+          left: clamp(16px, 2.4vw, 26px);
+        }
+
+        .flip-fold-glow {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0.25;
+          mix-blend-mode: multiply;
+        }
+
+        .flip-cast-shadow {
+          position: absolute;
+          inset: 0 0 0 50%;
+          transform-origin: left center;
+          pointer-events: none;
+          background: linear-gradient(90deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.14) 40%, rgba(0, 0, 0, 0) 82%);
+          opacity: 0;
+          will-change: transform, opacity;
+          z-index: 19;
+        }
+
+        @media (max-width: 900px) {
+          .book-spread {
+            width: min(96vw, 880px);
+            aspect-ratio: 10 / 8;
+          }
+
+          .book-title {
+            font-size: clamp(20px, 5vw, 42px);
+          }
+
+          .book-subtitle {
+            top: clamp(54px, 10vw, 100px);
+          }
+        }
+      `}</style>
+    </main>
   )
 }
