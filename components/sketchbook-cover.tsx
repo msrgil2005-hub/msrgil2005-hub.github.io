@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState } from "react"
 
 function FishDoodles() {
   return (
@@ -81,7 +81,8 @@ function FishDoodles() {
 const PAPER_COLOR = "#f0e8d0"
 const PAPER_BACK_COLOR = "#ede5cb"
 const TOTAL_SHEETS = 4
-const ANIM_DURATION = 1000
+const ANIM_DURATION = 900
+const TURN_EASE = "cubic-bezier(0.22, 1, 0.36, 1)"
 
 function PaperTexture() {
   return (
@@ -105,146 +106,25 @@ function PageEdgeStack() {
   )
 }
 
-/* ------------------------------------------------------------------
-   Realistic page turn keyframes:
-   - Corner lifts first via slight rotateZ (top-right lifts)
-   - Page rotates on left-edge hinge via rotateY
-   - Cylindrical curl simulated via scaleX compression mid-turn
-     so the page appears paper-thin when edge-on (~90deg)
-   - Soft shadows animate alongside
-   ------------------------------------------------------------------ */
-
 const FLIP_STYLES = `
-@keyframes pageTurnForward {
-  0% {
-    transform: perspective(2500px) rotateY(0deg) scaleX(1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  }
-  5% {
-    transform: perspective(2500px) rotateY(-5deg) scaleX(1);
-    box-shadow: -2px 2px 6px rgba(0,0,0,0.1);
-  }
-  25% {
-    transform: perspective(2500px) rotateY(-45deg) scaleX(0.95);
-    box-shadow: -8px 4px 16px rgba(0,0,0,0.18);
-  }
-  45% {
-    transform: perspective(2500px) rotateY(-85deg) scaleX(0.6);
-    box-shadow: -4px 2px 20px rgba(0,0,0,0.22);
-  }
-  50% {
-    transform: perspective(2500px) rotateY(-90deg) scaleX(0.3);
-    box-shadow: -2px 1px 12px rgba(0,0,0,0.2);
-  }
-  55% {
-    transform: perspective(2500px) rotateY(-95deg) scaleX(0.6);
-    box-shadow: -4px 2px 20px rgba(0,0,0,0.18);
-  }
-  75% {
-    transform: perspective(2500px) rotateY(-135deg) scaleX(0.95);
-    box-shadow: -6px 3px 14px rgba(0,0,0,0.12);
-  }
-  95% {
-    transform: perspective(2500px) rotateY(-177deg) scaleX(1);
-    box-shadow: -1px 1px 4px rgba(0,0,0,0.08);
-  }
-  100% {
-    transform: perspective(2500px) rotateY(-180deg) scaleX(1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
+@keyframes pageCurlForward {
+  0% { transform: scaleX(1) skewY(0deg); }
+  48% { transform: scaleX(0.7) skewY(-1deg); }
+  52% { transform: scaleX(0.66) skewY(1deg); }
+  100% { transform: scaleX(1) skewY(0deg); }
 }
 
-@keyframes pageTurnBackward {
-  0% {
-    transform: perspective(2500px) rotateY(-180deg) scaleX(1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
-  5% {
-    transform: perspective(2500px) rotateY(-175deg) scaleX(1);
-    box-shadow: -1px 1px 4px rgba(0,0,0,0.08);
-  }
-  25% {
-    transform: perspective(2500px) rotateY(-135deg) scaleX(0.95);
-    box-shadow: -6px 3px 14px rgba(0,0,0,0.12);
-  }
-  45% {
-    transform: perspective(2500px) rotateY(-95deg) scaleX(0.6);
-    box-shadow: -4px 2px 20px rgba(0,0,0,0.18);
-  }
-  50% {
-    transform: perspective(2500px) rotateY(-90deg) scaleX(0.3);
-    box-shadow: -2px 1px 12px rgba(0,0,0,0.2);
-  }
-  55% {
-    transform: perspective(2500px) rotateY(-85deg) scaleX(0.6);
-    box-shadow: -4px 2px 20px rgba(0,0,0,0.22);
-  }
-  75% {
-    transform: perspective(2500px) rotateY(-45deg) scaleX(0.95);
-    box-shadow: -8px 4px 16px rgba(0,0,0,0.18);
-  }
-  95% {
-    transform: perspective(2500px) rotateY(-3deg) scaleX(1);
-    box-shadow: -2px 2px 6px rgba(0,0,0,0.1);
-  }
-  100% {
-    transform: perspective(2500px) rotateY(0deg) scaleX(1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  }
+@keyframes pageCurlBackward {
+  0% { transform: scaleX(1) skewY(0deg); }
+  48% { transform: scaleX(0.7) skewY(1deg); }
+  52% { transform: scaleX(0.66) skewY(-1deg); }
+  100% { transform: scaleX(1) skewY(0deg); }
 }
 
-@keyframes coverTurnForward {
-  0% {
-    transform: perspective(2500px) rotateY(0deg);
-    box-shadow: 8px 8px 24px rgba(0,0,0,0.6);
-  }
-  25% {
-    transform: perspective(2500px) rotateY(-50deg);
-    box-shadow: -10px 4px 20px rgba(0,0,0,0.4);
-  }
-  50% {
-    transform: perspective(2500px) rotateY(-95deg);
-    box-shadow: -4px 2px 12px rgba(0,0,0,0.3);
-  }
-  75% {
-    transform: perspective(2500px) rotateY(-140deg);
-    box-shadow: -6px 3px 14px rgba(0,0,0,0.2);
-  }
-  100% {
-    transform: perspective(2500px) rotateY(-180deg);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.15);
-  }
-}
-
-@keyframes coverTurnBackward {
-  0% {
-    transform: perspective(2500px) rotateY(-180deg);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.15);
-  }
-  25% {
-    transform: perspective(2500px) rotateY(-140deg);
-    box-shadow: -6px 3px 14px rgba(0,0,0,0.2);
-  }
-  50% {
-    transform: perspective(2500px) rotateY(-85deg);
-    box-shadow: -4px 2px 12px rgba(0,0,0,0.3);
-  }
-  75% {
-    transform: perspective(2500px) rotateY(-40deg);
-    box-shadow: -10px 4px 20px rgba(0,0,0,0.4);
-  }
-  100% {
-    transform: perspective(2500px) rotateY(0deg);
-    box-shadow: 8px 8px 24px rgba(0,0,0,0.6);
-  }
-}
-
-/* Shadow that falls onto the page beneath during a turn */
-@keyframes pageShadowForward {
-  0%   { opacity: 0; }
-  30%  { opacity: 0.25; }
-  50%  { opacity: 0.4; }
-  70%  { opacity: 0.25; }
+@keyframes pageShadowPulse {
+  0% { opacity: 0; }
+  40% { opacity: 0.3; }
+  55% { opacity: 0.42; }
   100% { opacity: 0; }
 }
 `
@@ -257,25 +137,28 @@ function FlippableSheet({
   flipDir,
   coverOpen,
   onClick,
+  onTurnComplete,
 }: {
   sheetIndex: number
   isFlipped: boolean
   flipDir: FlipDir
   coverOpen: boolean
   onClick: () => void
+  onTurnComplete: () => void
 }) {
   const zBase = TOTAL_SHEETS - sheetIndex
-  const zIndex = isFlipped && !flipDir ? sheetIndex + 1 : zBase
+  const isTurning = flipDir !== null
+  const zIndex = isTurning ? TOTAL_SHEETS + 20 : isFlipped ? sheetIndex + 1 : zBase
 
   const staticTransform = isFlipped
     ? "perspective(2500px) rotateY(-180deg) scaleX(1)"
     : "perspective(2500px) rotateY(0deg) scaleX(1)"
 
-  const animName =
+  const curlAnim =
     flipDir === "forward"
-      ? "pageTurnForward"
+      ? "pageCurlForward"
       : flipDir === "backward"
-        ? "pageTurnBackward"
+        ? "pageCurlBackward"
         : undefined
 
   return (
@@ -284,10 +167,9 @@ function FlippableSheet({
       style={{
         transformOrigin: "left center",
         transformStyle: "preserve-3d",
-        transform: animName ? undefined : staticTransform,
-        animation: animName
-          ? `${animName} ${ANIM_DURATION}ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards`
-          : undefined,
+        transform: staticTransform,
+        transition: `transform ${ANIM_DURATION}ms ${TURN_EASE}`,
+        willChange: isTurning ? "transform" : undefined,
         zIndex,
         cursor: coverOpen ? "pointer" : "default",
         pointerEvents: coverOpen ? "auto" : "none",
@@ -305,6 +187,12 @@ function FlippableSheet({
           onClick()
         }
       }}
+      onTransitionEnd={(e) => {
+        if (e.target !== e.currentTarget || e.propertyName !== "transform") return
+        if (isTurning) {
+          onTurnComplete()
+        }
+      }}
     >
       {/* Front face -- right-hand page */}
       <div
@@ -312,6 +200,9 @@ function FlippableSheet({
         style={{
           backfaceVisibility: "hidden",
           background: PAPER_COLOR,
+          transformOrigin: "left center",
+          animation: curlAnim ? `${curlAnim} ${ANIM_DURATION}ms ${TURN_EASE}` : undefined,
+          willChange: curlAnim ? "transform" : undefined,
         }}
       >
         <PageEdgeStack />
@@ -333,6 +224,9 @@ function FlippableSheet({
           backfaceVisibility: "hidden",
           transform: "rotateY(180deg)",
           background: PAPER_BACK_COLOR,
+          transformOrigin: "left center",
+          animation: curlAnim ? `${curlAnim} ${ANIM_DURATION}ms ${TURN_EASE}` : undefined,
+          willChange: curlAnim ? "transform" : undefined,
         }}
       >
         <PaperTexture />
@@ -346,13 +240,13 @@ function FlippableSheet({
       </div>
 
       {/* Drop shadow onto the page below, visible mid-animation */}
-      {flipDir && (
+      {isTurning && (
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
               "linear-gradient(90deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 30%, transparent 60%)",
-            animation: `pageShadowForward ${ANIM_DURATION}ms ease forwards`,
+            animation: `pageShadowPulse ${ANIM_DURATION}ms linear forwards`,
             zIndex: -1,
           }}
         />
@@ -371,28 +265,6 @@ export function SketchbookCover() {
     Array(TOTAL_SHEETS).fill(null)
   )
   const [animating, setAnimating] = useState(false)
-
-  const clearCoverFlip = useCallback(() => {
-    setCoverFlipDir(null)
-    setAnimating(false)
-  }, [])
-
-  useEffect(() => {
-    if (coverFlipDir) {
-      const t = setTimeout(clearCoverFlip, ANIM_DURATION + 50)
-      return () => clearTimeout(t)
-    }
-  }, [coverFlipDir, clearCoverFlip])
-
-  useEffect(() => {
-    if (sheetFlipDirs.some((d) => d !== null)) {
-      const t = setTimeout(() => {
-        setSheetFlipDirs(Array(TOTAL_SHEETS).fill(null))
-        setAnimating(false)
-      }, ANIM_DURATION + 50)
-      return () => clearTimeout(t)
-    }
-  }, [sheetFlipDirs])
 
   function handleCoverClick() {
     if (animating) return
@@ -438,13 +310,6 @@ export function SketchbookCover() {
       return next
     })
   }
-
-  const coverAnimName =
-    coverFlipDir === "forward"
-      ? "coverTurnForward"
-      : coverFlipDir === "backward"
-        ? "coverTurnBackward"
-        : undefined
 
   const coverStaticTransform = coverOpen
     ? "perspective(2500px) rotateY(-180deg)"
@@ -492,6 +357,15 @@ export function SketchbookCover() {
                   flipDir={sheetFlipDirs[idx]}
                   coverOpen={coverOpen}
                   onClick={() => handleSheetClick(idx)}
+                  onTurnComplete={() => {
+                    setSheetFlipDirs((prev) => {
+                      if (!prev[idx]) return prev
+                      const next = [...prev]
+                      next[idx] = null
+                      return next
+                    })
+                    setAnimating(false)
+                  }}
                 />
               ))}
 
@@ -501,10 +375,12 @@ export function SketchbookCover() {
               style={{
                 transformOrigin: "left center",
                 transformStyle: "preserve-3d",
-                transform: coverAnimName ? undefined : coverStaticTransform,
-                animation: coverAnimName
-                  ? `${coverAnimName} ${ANIM_DURATION}ms cubic-bezier(0.4, 0.0, 0.2, 1) forwards`
-                  : undefined,
+                transform: coverStaticTransform,
+                transition: `transform ${ANIM_DURATION}ms ${TURN_EASE}, box-shadow ${ANIM_DURATION}ms ${TURN_EASE}`,
+                willChange: coverFlipDir ? "transform" : undefined,
+                boxShadow: coverOpen
+                  ? "0 1px 6px rgba(0,0,0,0.15)"
+                  : "8px 8px 24px rgba(0,0,0,0.6)",
                 zIndex:
                   coverOpen && !coverFlipDir ? 0 : TOTAL_SHEETS + 10,
               }}
@@ -516,6 +392,13 @@ export function SketchbookCover() {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault()
                   handleCoverClick()
+                }
+              }}
+              onTransitionEnd={(e) => {
+                if (e.target !== e.currentTarget || e.propertyName !== "transform") return
+                if (coverFlipDir) {
+                  setCoverFlipDir(null)
+                  setAnimating(false)
                 }
               }}
             >
