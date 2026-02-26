@@ -154,7 +154,9 @@ function FlippableSheet({
 
   const staticTransform = isFlipped
     ? "perspective(2500px) rotateY(-180deg) scaleX(1)"
-    : `perspective(2500px) rotateY(0deg) scaleX(1) translateX(${stackOffset}px)`
+    : isTurning
+      ? "perspective(2500px) rotateY(0deg) scaleX(1)"
+      : `perspective(2500px) rotateY(0deg) scaleX(1) translateX(${stackOffset}px)`
 
   const curlAnim =
     flipDir === "forward"
