@@ -178,6 +178,11 @@ function FlippableSheet({
       }}
       onClick={(e) => {
         e.stopPropagation()
+        const rect = e.currentTarget.getBoundingClientRect()
+        if (rect.width <= 0) return
+        const clickRatio = (e.clientX - rect.left) / rect.width
+        const clickedAllowedSide = isFlipped ? clickRatio < 0.5 : clickRatio > 0.5
+        if (!clickedAllowedSide) return
         onClick()
       }}
       role="button"
