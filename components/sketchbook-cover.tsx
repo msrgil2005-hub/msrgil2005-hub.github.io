@@ -350,14 +350,10 @@ export function SketchbookCover() {
     <>
       <style dangerouslySetInnerHTML={{ __html: FLIP_STYLES }} />
       <main className="flex items-center justify-center min-h-svh bg-[#0d0d0d] p-4 sm:p-6 md:p-8 overflow-hidden">
-        {/* Book wrapper -- shifts left when open to center the two-page spread */}
+        {/* Book wrapper */}
         <div
           className="relative transition-transform duration-700 ease-in-out"
-          style={{
-            transform: coverOpen
-              ? "translateX(calc(min(45vw, 240px) * -0.45))"
-              : "translateX(0)",
-          }}
+          style={{ transform: "translateX(0)" }}
         >
           {/* Perspective container */}
           <div
