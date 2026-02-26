@@ -491,7 +491,7 @@ export function SketchbookCover() {
 
               {/* Back of cover */}
               <div
-                className="absolute inset-0 rounded-lg sm:rounded-xl overflow-hidden"
+                className="absolute inset-0 rounded-r-lg sm:rounded-r-xl overflow-hidden"
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
