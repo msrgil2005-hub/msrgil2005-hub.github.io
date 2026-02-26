@@ -470,14 +470,23 @@ export function SketchbookCover() {
 
               {/* Back of cover */}
               <div
-                className="absolute inset-0 rounded-lg sm:rounded-xl"
+                className="absolute inset-0 rounded-lg sm:rounded-xl overflow-hidden"
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
                   background:
-                    "linear-gradient(145deg, #181818 0%, #101010 50%, #0a0a0a 100%)",
+                    `linear-gradient(145deg, ${PAPER_BACK_COLOR} 0%, ${PAPER_COLOR} 55%, ${PAPER_BACK_COLOR} 100%)`,
                 }}
-              />
+              >
+                <PaperTexture />
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, rgba(0,0,0,0.07) 0%, rgba(0,0,0,0.02) 14%, transparent 40%)",
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
