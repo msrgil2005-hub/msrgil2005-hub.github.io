@@ -228,7 +228,7 @@ function FlippableSheet({
 
       {/* Back face -- left-hand page when flipped */}
       <div
-        className="absolute inset-0 rounded-r-lg sm:rounded-r-xl overflow-hidden"
+        className="absolute inset-0 rounded-l-lg sm:rounded-l-xl overflow-hidden"
         style={{
           backfaceVisibility: "hidden",
           transform: "rotateY(180deg)",
@@ -491,7 +491,7 @@ export function SketchbookCover() {
 
               {/* Back of cover */}
               <div
-                className="absolute inset-0 rounded-r-lg sm:rounded-r-xl overflow-hidden"
+                className="absolute inset-0 rounded-l-lg sm:rounded-l-xl overflow-hidden"
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
