@@ -130,6 +130,7 @@ const FLIP_STYLES = `
 `
 
 type FlipDir = "forward" | "backward" | null
+type ActiveTurn = { index: number; dir: Exclude<FlipDir, null> } | null
 
 function FlippableSheet({
   sheetIndex,
@@ -155,7 +156,10 @@ function FlippableSheet({
       ? flippedZBase
       : unflippedZBase
 
-  const staticTransform = isFlipped
+  const visualFlipped =
+    flipDir === "forward" ? true : flipDir === "backward" ? false : isFlipped
+
+  const staticTransform = visualFlipped
     ? "perspective(2500px) rotateY(-180deg) scaleX(1)"
     : "perspective(2500px) rotateY(0deg) scaleX(1)"
 
@@ -271,12 +275,7 @@ export function SketchbookCover() {
   const [flippedSheets, setFlippedSheets] = useState<boolean[]>(
     Array(TOTAL_SHEETS).fill(false)
   )
-  const [settledFlippedSheets, setSettledFlippedSheets] = useState<boolean[]>(
-    Array(TOTAL_SHEETS).fill(false)
-  )
-  const [sheetFlipDirs, setSheetFlipDirs] = useState<FlipDir[]>(
-    Array(TOTAL_SHEETS).fill(null)
-  )
+  const [activeTurn, setActiveTurn] = useState<ActiveTurn>(null)
   const [animating, setAnimating] = useState(false)
 
   function handleCoverClick() {
@@ -296,51 +295,29 @@ export function SketchbookCover() {
   }
 
   function handleSheetClick(index: number) {
-    if (animating) return
-    setFlippedSheets((prev) => {
-      const next = [...prev]
-      if (!next[index]) {
-        const firstUnflipped = prev.findIndex((f) => !f)
-        if (firstUnflipped !== index) return prev
-        next[index] = true
-        setAnimating(true)
-        setSheetFlipDirs((d) => {
-          const nd = [...d]
-          nd[index] = "forward"
-          return nd
-        })
-      } else {
-        const lastFlipped = prev.lastIndexOf(true)
-        if (lastFlipped !== index) return prev
-        next[index] = false
-        setAnimating(true)
-        setSheetFlipDirs((d) => {
-          const nd = [...d]
-          nd[index] = "backward"
-          return nd
-        })
-      }
-      return next
-    })
+    if (animating || activeTurn) return
+
+    const current = flippedSheets[index]
+    if (!current) {
+      const firstUnflipped = flippedSheets.findIndex((f) => !f)
+      if (firstUnflipped !== index) return
+      setAnimating(true)
+      setActiveTurn({ index, dir: "forward" })
+      return
+    }
+
+    const lastFlipped = flippedSheets.lastIndexOf(true)
+    if (lastFlipped !== index) return
+    setAnimating(true)
+    setActiveTurn({ index, dir: "backward" })
   }
 
   const coverStaticTransform = coverOpen
     ? "perspective(2500px) rotateY(-180deg)"
     : "perspective(2500px) rotateY(0deg)"
 
-  const settledHasFlippedSheets = settledFlippedSheets.some(Boolean)
-  const hasLogicalFlippedSheets = flippedSheets.some(Boolean)
-  const isOpeningFromCoverSpread =
-    !settledHasFlippedSheets && sheetFlipDirs.some((d) => d === "forward")
-  const isClosingToCoverSpread =
-    settledHasFlippedSheets &&
-    !hasLogicalFlippedSheets &&
-    sheetFlipDirs.some((d) => d === "backward")
-  const showPaperLeftSide = isOpeningFromCoverSpread
-    ? true
-    : isClosingToCoverSpread
-      ? false
-      : settledHasFlippedSheets
+  const hasFlippedSheets = flippedSheets.some(Boolean)
+  const showPaperLeftSide = hasFlippedSheets || activeTurn?.dir === "forward"
 
   return (
     <>
@@ -377,17 +354,17 @@ export function SketchbookCover() {
                   key={idx}
                   sheetIndex={idx}
                   isFlipped={flippedSheets[idx]}
-                  flipDir={sheetFlipDirs[idx]}
+                  flipDir={activeTurn?.index === idx ? activeTurn.dir : null}
                   coverOpen={coverOpen}
                   onClick={() => handleSheetClick(idx)}
                   onTurnComplete={() => {
-                    setSettledFlippedSheets(flippedSheets)
-                    setSheetFlipDirs((prev) => {
-                      if (!prev[idx]) return prev
+                    if (!activeTurn || activeTurn.index !== idx) return
+                    setFlippedSheets((prev) => {
                       const next = [...prev]
-                      next[idx] = null
+                      next[idx] = activeTurn.dir === "forward"
                       return next
                     })
+                    setActiveTurn(null)
                     setAnimating(false)
                   }}
                 />
